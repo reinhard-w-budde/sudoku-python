@@ -1,11 +1,11 @@
 from sudoku.cell import idx2xy
 
 def xy2block(x, y):
-    '''convert an index to a the x-y-coordinate of the 3x3 block (the third neighborhood) of the cell. Possible values are x from 1..3 and y from 1..3'''
+    """convert an index to a the x-y-coordinate of the 3x3 block (the third neighborhood) of the cell. Possible values are x from 1..3 and y from 1..3"""
     return [((x - 1) // 3) * 3 + 1,((y - 1) // 3) * 3 + 1]
 
 def inc(ia, incr):
-    '''create a copy of an int[]. The values of the copy are the original values incremented by a fixed number'''
+    """create a copy of an int[]. The values of the copy are the original values incremented by a fixed number"""
     iaC = [None] * 9
     for i in range(9):
         iaC[i] = ia[i] + incr
@@ -59,9 +59,9 @@ for i in range(81):
     NEIGHBARHOOD_MAPPING[i] = [ALL_H[y - 1], ALL_V[x - 1], ALL_B[g]]
 
 def getNeighborHood(idx):
-    '''return the neighbarhoods of a cell as an int[]'''
+    """return the neighbarhoods of a cell as an int[]"""
     return NEIGHBARHOOD_MAPPING.get(idx)
 
 def getAllNeighborhoods():
-    '''return all neighbarhoods. Used to validate that all cells from each neighbarhood have different values, for instance'''
+    """return all neighbarhoods. Used to validate that all cells from each neighbarhood have different values, for instance"""
     return ALL_NEIGHBARHOODS

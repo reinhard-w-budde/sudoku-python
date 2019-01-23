@@ -8,14 +8,14 @@ RULE_BACKTRACK = "RULE_BACKTRACK"
 RESULT_BACKTRACK = "RESULT_BACKTRACK"
 
 def ruleOneValLeft(recDepth, state):
-    '''for for every cell C
+    """for for every cell C
        if: only one value is possible for C
        then: propagate this to C' neighborhood
        if: some cell could be finalized,
        then: call the rule recursively
 
        return the updated state, after the rule has finished
-    '''
+    """
     ruleOneValLeftId = 'O'
     do.logStartRule(RULE_ONE_VAL_LEFT, recDepth, ruleOneValLeftId, state)
     finalizedCellsBefore = state.getNumberFinalized()
@@ -27,11 +27,11 @@ def ruleOneValLeft(recDepth, state):
     return state
 
 def ruleOneValLeftSingleStep(recDepth, state):
-    '''for for every cell C
+    """for for every cell C
        if: only one value is possible for C
        then: propagate this to C' neighborhood
        return the updated state, after the rule has finished
-    '''
+    """
     ruleOneValLeftId = 'O'
     for cell in state.getCells():
         if not cell.isFinalValueSet() and cell.isOnlyOneValLeft():
@@ -41,13 +41,13 @@ def ruleOneValLeftSingleStep(recDepth, state):
     return state
 
 def ruleExcludedVal(recDepth, state):
-    '''check for every cell C
+    """check for every cell C
        if: C's neighbarhood cannot hold a value V, which is possible for C
        then: V must be the correct value for C. Propagate this to C's neighbarhood if: some cell could be finalized,
        then: call the rule recursively
 
        return the updated state, after the rule has finished
-    '''
+    """
     ruleExcludedValId = 'E'
     do.logStartRule(RULE_EXCLUDED_VAL, recDepth, ruleExcludedValId, state)
     atLeastOneSuccess = False
@@ -68,23 +68,25 @@ def ruleExcludedVal(recDepth, state):
     return state
 
 def ruleBacktracker(recDepth, state, visitedCells):
-    '''check for every cell C, by stepping through all possible values V
+    """check for every cell C, by stepping through all possible values V
        try: to solve the sudoko assumg that C's value is V
        success: done
        fail: backtrack to try the next possible value of C
        
        return the updated state, after the rule has finished
-    '''
+    """
     ruleBacktrackerId = 'B'
     do.logStartRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, state)
-    cell = pickCell(state, visitedCells)
-    while cell is not None:
+    while True:
+        cell = pickCell(state, visitedCells)
+        if cell is None:
+            break
         idx = cell.getIdx()
         for val in cell.getPossibleVals():
             stateForTrial = state.clone()
             test = stateForTrial.getCells()[idx]
             try:
-                do.logI(RESULT_BACKTRACK, recDepth, f'{ruleBacktrackerId}: TRY  cell {test.toString()} = {val}')
+                do.logI(RESULT_BACKTRACK, recDepth, f'{ruleBacktrackerId}: TRY  cell {test} = {val}')
                 stateForTrial.setFinalCellVal(test, val, ruleBacktrackerId)
                 stateForTrial = ruleOneValLeft(recDepth + 1, stateForTrial)
                 stateForTrial = ruleExcludedVal(recDepth + 1, stateForTrial)
@@ -92,20 +94,18 @@ def ruleBacktracker(recDepth, state, visitedCells):
                 stateForTrial.valid()
                 if stateForTrial.getNumberFinalized() < 81:
                     stateForTrial = ruleBacktracker(recDepth + 1, stateForTrial, visitedCells)
-                    cell = pickCell(state, visitedCells)
-                do.logEndRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, "FINAL SUCCESS", stateForTrial)
+                do.logEndRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, " FINAL SUCCESS", stateForTrial)
                 return stateForTrial
             except RuntimeError:
-                do.logI(RESULT_BACKTRACK, recDepth, f'{ruleBacktrackerId}: FAIL cell {state.getCells()[idx].toString()} = {val}')
+                do.logI(RESULT_BACKTRACK, recDepth, f'{ruleBacktrackerId}: FAIL cell {state.getCells()[idx]} = {val}')
                 state.incrSteps(stateForTrial.getSteps())
-                cell = pickCell(state, visitedCells)
-        do.logEndRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, f'NO SOLUTION for {cell.toXY()}', state)
-        raise RuntimeError(f'{ruleBacktrackerId}: no solution (1)')
-    do.logEndRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, f'NO SOLUTION AT ALL', state)
+        do.logEndRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, f' NO SOLUTION for {cell.toXY()}', state)
+        # raise RuntimeError(f'{ruleBacktrackerId}: no solution (1)')
+    do.logEndRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, f' NO SOLUTION AT ALL', state)
     raise RuntimeError(f'{ruleBacktrackerId}: no solution (2)')
 
 def pickCell(state, visitedCells):
-    '''pick the cell with the least number of possible values, but only, if not already visited :-) and if not finalized'''
+    """pick the cell with the least number of possible values, but only, if not already visited :-) and if not finalized"""
     minValsCell = None
     for cell in state.getCells():
         if not cell.getIdx() in visitedCells:

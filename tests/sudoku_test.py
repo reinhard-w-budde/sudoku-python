@@ -7,59 +7,64 @@ from sudoku.state import State
 
 class SudokuTest(unittest.TestCase):
 
-	def testInit(self):
+	def test_init(self):
 		with self.assertRaises(RuntimeError): State(None)
 		with self.assertRaises(RuntimeError): do.string2cells("...")
 		state = State(do.string2cells('.' * 81))
 		self.assertIsNotNone(state)
 
-	def testInitExampl3(self):
-		state = State(do.string2cells(self.example(3)))
+	def test_initexample_3(self):
+		state = State(do.string2cells(self.__example(3)))
 		state = rulemachine.ruleOneValLeft(0, state)
 
 		for i in range(9):
 			cell = state.getCells()[i]
-			self.assertEquals(i + 1, cell.getTheFinalVal())
+			self.assertEqual(i + 1, cell.getTheFinalVal())
 		for i in range(9, 27):
 			cell = state.getCells()[i]
-			self.assertEquals(6, len(cell.getPossibleVals()))
+			self.assertEqual(6, len(cell.getPossibleVals()))
 		for i in range(27, 81):
 			cell = state.getCells()[i]
-			self.assertEquals(8, len(cell.getPossibleVals()))
+			self.assertEqual(8, len(cell.getPossibleVals()))
 
-	def testClone(self):
-		example2 = self.example(2)
+	def test_clone(self):
+		example2 = self.__example(2)
 		cells = do.string2cells(example2)
 		state1 = State(cells)
 		state2 = state1.clone()
-		self.assertEquals(state1.toString(), state2.toString())
-		self.assertEquals(state1.toStringWithDetails(True), state2.toStringWithDetails(True))
+		self.assertEqual(str(state1), str(state2))
+		self.assertEqual(state1.toStringWithDetails(True), state2.toStringWithDetails(True))
 
-	def ignore_testOne(self):
-		self.runTest(10)
+	@unittest.skip("enable to run a single test")
+	def test_only_one_sudoku(self):
+		self.__runTest(10)
 
-	def testComplete(self):
+	# @unittest.skip("enable to run a single test")
+	def test_only_one_challenge(self):
+		runsudoku.runChallenge('h')
+
+	def test_all_example_sudokus(self):
 		lastNumber = 11
 		print(f'\nTESTING {lastNumber} SUDOKUS')
 		for i in range(1, lastNumber):
-			self.runTest(i)
+			self.__runTest(i)
 
-	def runTest(self, number):
-		print("\nNUMBER " + str(number))
-		toSolve = self.example(number)
+	def __runTest(self, number):
+		print(f'\nNUMBER {number}')
+		toSolve = self.__example(number)
 		solution = runsudoku.run(toSolve)
-		expected = self.solution(number)
+		expected = self.__solution(number)
 		if expected is not None:
-			self.assertEquals(expected, solution.toString())
+			self.assertEqual(expected, str(solution))
 
-	def example(self, number):
+	def __example(self, number):
 		try:
 			path = f'_examples/sudoku-{number:{0}{2}}'
 			return runsudoku.readAllLines(path, "")
 		except Exception:
 			raise RuntimeError(f'File {path} could not be read')
 
-	def solution(self, number):
+	def __solution(self, number):
 		try:
 			path = f'_solutions/sudoku-{number:{0}{2}}'
 			return runsudoku.readAllLines(path, "\n")
