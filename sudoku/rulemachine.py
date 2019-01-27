@@ -90,17 +90,17 @@ def ruleBacktracker(recDepth, state, visitedCells):
                 stateForTrial.setFinalCellVal(test, val, ruleBacktrackerId)
                 stateForTrial = ruleOneValLeft(recDepth + 1, stateForTrial)
                 stateForTrial = ruleExcludedVal(recDepth + 1, stateForTrial)
-                do.logI(RESULT_BACKTRACK, recDepth, f'{ruleBacktrackerId}: SUCC cell {test.toXY()} = {val}')
                 stateForTrial.valid()
+                do.logI(RESULT_BACKTRACK, recDepth, f'{ruleBacktrackerId}: SUCC cell {test.toXY()} = {val}')
                 if stateForTrial.getNumberFinalized() < 81:
-                    stateForTrial = ruleBacktracker(recDepth + 1, stateForTrial, visitedCells)
+                    stateForTrial = ruleBacktracker(recDepth + 1, stateForTrial, list(visitedCells))
                 do.logEndRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, " FINAL SUCCESS", stateForTrial)
                 return stateForTrial
             except RuntimeError:
-                do.logI(RESULT_BACKTRACK, recDepth, f'{ruleBacktrackerId}: FAIL cell {state.getCells()[idx]} = {val}')
+                do.logI(RESULT_BACKTRACK, recDepth, f'{ruleBacktrackerId}: FAIL cell {cell} = {val}')
                 state.incrSteps(stateForTrial.getSteps())
         do.logEndRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, f' NO SOLUTION for {cell.toXY()}', state)
-        # raise RuntimeError(f'{ruleBacktrackerId}: no solution (1)')
+        raise RuntimeError(f'{ruleBacktrackerId}: no solution (1)')
     do.logEndRule(RULE_BACKTRACK, recDepth, ruleBacktrackerId, f' NO SOLUTION AT ALL', state)
     raise RuntimeError(f'{ruleBacktrackerId}: no solution (2)')
 

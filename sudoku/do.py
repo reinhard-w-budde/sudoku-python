@@ -64,6 +64,7 @@ def __check(aS):
         raise RuntimeError("invalid chars. Must be 1..9 ' ' or '.'")
 
 def __isEnabled(log):
+    # return log == 'RUN'
     return not (log in NOT_ENABLED)
 
 def __logRule(log, depth, prefix, ruleId, msg, state):

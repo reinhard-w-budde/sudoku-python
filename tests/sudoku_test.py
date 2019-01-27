@@ -39,10 +39,6 @@ class SudokuTest(unittest.TestCase):
 	def test_only_one_sudoku(self):
 		self.__runTest(10)
 
-	# @unittest.skip("enable to run a single test")
-	def test_only_one_challenge(self):
-		runsudoku.runChallenge('h')
-
 	def test_all_example_sudokus(self):
 		lastNumber = 11
 		print(f'\nTESTING {lastNumber} SUDOKUS')
