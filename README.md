@@ -9,8 +9,8 @@ It is open-source and can be changed and used for private purposes without any r
 
 This git repository contains a Python >=3.6 solution. Other languages, I use, will be addressed, too:
 
-* Java (git repo sudoku-java),
-* Python3 (git repo sudoku-python; this one),
+* Java (https://github.com/reinhard-w-budde/sudoku-java.git )
+* Python (this Git repo,  https://github.com/reinhard-w-budde/sudoku-java.git )
 * Go,
 * Typescript (implies a Javascript solution).
 
@@ -45,7 +45,7 @@ This git repository contains a Python >=3.6 solution. Other languages, I use, wi
 
 ## Requirements for Python
 
-* Python3 on the path. Versions must be >= 3.6 as f-strings are used
+* Python on the path. Versions must be >= 3.6 as f-strings are used
 * Git. It is great, that after installation (on windows) you get a bash shell for free.
 
 * Eclipse Photon. Older versions will do as well. Eclipse integration of Git is good. Install the PyDev plugin.
@@ -59,21 +59,21 @@ Eclipse is not strictly needed. If you have experiences with other programming e
     mkdir git; cd git
 ```
 
-2. get the git repository. It contains the branches master and develop. Checkout the develop branch
+2. get the git repository. It contains the branch master.
 ```sh
     git clone https://github.com/reinhard-w-budde/sudoku-python.git
     cd sudoku-python
-    git checkout develop
 ```
 
-3. run. All sudokus from the 'examples' folder will be solved as tests.
+3. test. All sudokus from the '_examples' folder will be solved as tests and compared with the solutions in '_solutions'.
+   Run from the project base directory
 ```sh
     python -m unittest tests/*.py || echo -e '\n===========\nTEST FAILED\n===========\n'
 ```
 
-4. put sudokus, which you want to solve into files of the '_challenges'. Run from the project base directory
+4. put sudokus into files which you want to solve, for examples into folder '_challenges'. Run from the project base directory
 ```sh
-    python sudoku/runsudoku.py <your-file-name>
+    python sudoku/runsudoku.py _challenges/YOUR_FILE_NAME
 ```
 
-5. For suggestions, discussions, questions, proposal for a better style contact me at reinhard.budde at iais.fraunhofer.de
+5. For suggestions, discussions, questions, proposals for a better programming style contact me at reinhard.budde at iais.fraunhofer.de

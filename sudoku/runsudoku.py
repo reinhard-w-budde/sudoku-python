@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 import sys
 
 sys.path.append(".")
@@ -10,7 +10,7 @@ from sudoku.state import State
 RUN = "RUN"
 
 def run(aS):
-    start = datetime.now()
+    start = datetime.datetime.now()
     state = State(do.string2cells(aS));
     do.log(RUN, f'start with {state.getNumberFinalized()} known values')
     do.showState(state, False)
@@ -20,17 +20,18 @@ def run(aS):
         if state.getNumberFinalized() < 81:
             state = rulemachine.ruleBacktracker(0, state, [])
     state.valid()
-    delta = datetime.now() - start
-    do.log(RUN, f'final result after {state.getSteps()} steps using {delta} msec')
+    delta = datetime.datetime.now() - start
+    msec = int(delta.total_seconds() * 1000)
+    do.log(RUN, f'final result after {state.getSteps()} steps using {msec} msec')
     do.showState(state, False)
     return state
 
-def runChallenge(challengeFileNameInFolderChallenges):
-    print(f'trying to solve SUDOKU {challengeFileNameInFolderChallenges}')
+def runChallenge(challengeFileName):
+    print(f'trying to solve SUDOKU {challengeFileName}')
     try:
-        toSolve = readAllLines(f'_challenges/{challengeFileNameInFolderChallenges}', '')
+        toSolve = readAllLines(challengeFileName, '')
     except RuntimeError:
-        print(f'The challenge file _challenges/{challengeFileNameInFolderChallenges} could not be read')
+        print(f'The challenge file {challengeFileName} could not be read')
     run(toSolve)
 
 def readAllLines(name, sep):
@@ -38,5 +39,5 @@ def readAllLines(name, sep):
         return sep.join(line.strip() for line in f)
 
 if __name__ == "__main__":
-    challengeFileNameInFolderChallenges = sys.argv[1]
-    runChallenge(challengeFileNameInFolderChallenges)
+    challengeFileName = sys.argv[1]
+    runChallenge(challengeFileName)
